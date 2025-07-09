@@ -21,7 +21,6 @@ CREATE TABLE "Task" (
 CREATE TABLE "Option" (
     "id" SERIAL NOT NULL,
     "image_url" TEXT NOT NULL,
-    "option_id" INTEGER NOT NULL,
     "task_id" INTEGER NOT NULL,
 
     CONSTRAINT "Option_pkey" PRIMARY KEY ("id")

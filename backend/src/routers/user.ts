@@ -5,9 +5,51 @@ import { Router } from 'express';
 import jwt from 'jsonwebtoken';
 import { authMiddleware } from '../middleware';
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
+import { createTaskInput } from '../types';
 
 const route = Router();
 const prismaClient = new PrismaClient();
+
+route.post('/task', authMiddleware, async (req, res) => {
+  // @ts-ignore
+  const userId = req.userId;
+
+  //validating user inputs
+  const body = req.body;
+
+  const parseData = createTaskInput.safeParse(body);
+
+  if (!parseData.success) {
+    res.status(400).json({
+      message: 'Invalid input data',
+      error: parseData.error.errors,
+    });
+  }
+
+  const response = await prismaClient.$transaction(async (tx) => {
+    //avoid partial updates, either both title and options should happen or none
+    const res = await tx.task.create({
+      data: {
+        title: parseData.data?.title,
+        amount: '1',
+        signature: 'signature',
+        user_id: userId,
+      },
+    });
+
+    await tx.option.createMany({
+      data: parseData.data!.options.map((option) => ({
+        image_url: option.imageUrl,
+        task_id: res.id,
+      })),
+    });
+    return res;
+  });
+
+  res.json({
+    id: response.id,
+  });
+});
 
 route.get('/presignedUrl', authMiddleware, async (req, res) => {
   // @ts-ignore

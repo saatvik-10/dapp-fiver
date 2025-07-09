@@ -4,6 +4,8 @@ import wokrerRouter from './routers/worker';
 
 const app = express();
 
+app.use(express.json());
+
 app.use('/v1/user', userRouter);
 app.use('/v1/worker', wokrerRouter);
 
