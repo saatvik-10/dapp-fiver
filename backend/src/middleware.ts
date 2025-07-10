@@ -17,14 +17,16 @@ export function authMiddleware(
       req.userId = decoded.userId;
       next();
     } else {
-      res.send(403).json({
+      res.status(403).json({
         message: 'You are not logged in',
       });
+      return;
     }
   } catch (err) {
-    res.send(403).json({
+    res.status(403).json({
       message: 'You are not logged in',
     });
+    return;
   }
 }
 
@@ -39,17 +41,17 @@ export function workerMiddleware(
     const decoded = jwt.verify(authHeader, process.env.JWT_SECRET_WORKER!);
 
     // @ts-ignore
-    if (decoded.userId) {
+    if (decoded.workerId) {
       // @ts-ignore
-      req.userId = decoded.userId;
-      next();
+      req.workerId = decoded.workerId;
+      return next();
     } else {
-      res.send(403).json({
+      res.status(403).json({
         message: 'You are not logged in',
       });
     }
   } catch (err) {
-    res.send(403).json({
+    res.status(403).json({
       message: 'You are not logged in',
     });
   }

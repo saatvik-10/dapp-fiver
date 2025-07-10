@@ -1,9 +1,41 @@
 import { PrismaClient } from '@prisma/client';
 import { Router } from 'express';
 import jwt from 'jsonwebtoken';
+import { workerMiddleware } from '../middleware';
 
 const route = Router();
 const prismaClient = new PrismaClient();
+
+route.get('/nextTask', workerMiddleware, async (req, res) => {
+  // @ts-ignore
+  const workerId = req.workerId;
+
+  const task = await prismaClient.task.findFirst({
+    where: {
+      done: false,
+      submissions: {
+        none: {
+          worker_id: workerId,
+        },
+      },
+    },
+    select: {
+      title: true,
+      options: true,
+    },
+  });
+
+  if (!task) {
+    res.status(404).json({
+      message: 'No more task available!',
+    });
+    return;
+  }
+
+  res.status(200).json({
+    task,
+  });
+});
 
 //signin with wallet
 route.post('/signin', async (req, res) => {
