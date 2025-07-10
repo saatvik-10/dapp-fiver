@@ -13,6 +13,7 @@ CREATE TABLE "Task" (
     "user_id" INTEGER NOT NULL,
     "signature" TEXT NOT NULL,
     "amount" TEXT NOT NULL,
+    "done" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Task_pkey" PRIMARY KEY ("id")
 );

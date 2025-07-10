@@ -29,6 +29,7 @@ model Task {
   submissions Submission[]
   signature   String
   amount      String
+  done        Boolean      @default(false)
 }
 
 model Option {
