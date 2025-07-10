@@ -15,9 +15,10 @@ datasource db {
 }
 
 model User {
-  id      Int    @id @default(autoincrement())
-  address String @unique
+  id      Int       @id @default(autoincrement())
+  address String    @unique
   tasks   Task[]
+  payouts Payouts[]
 }
 
 model Task {
@@ -59,4 +60,19 @@ model Submission {
   amount    Int
 
   @@unique([worker_id, task_id])
+}
+
+model Payouts {
+  id        Int       @id @default(autoincrement())
+  user_id   Int
+  user      User      @relation(fields: [user_id], references: [id])
+  amount    Int
+  signature String
+  status    TxnStatus
+}
+
+enum TxnStatus {
+  PROCESSING
+  COMPLETED
+  FAILED
 }
