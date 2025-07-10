@@ -11,6 +11,25 @@ const TOTAL_SUBMISSION = 100;
 const route = Router();
 const prismaClient = new PrismaClient();
 
+route.post('/payout', workerMiddleware, async (req, res) => {
+  //@ts-ignore
+  const workerId = req.workerId;
+
+  const worker = await prismaClient.worker.findFirst({
+    where: {
+      id: workerId,
+    },
+  });
+
+  if (!worker) {
+    res.status(404).json({
+      message: 'User not found',
+    });
+  }
+  //txn logic
+  const txnId = 'x23';
+});
+
 route.get('/balance', workerMiddleware, async (req, res) => {
   //@ts-ignore
   const workerId = req.workerId;
