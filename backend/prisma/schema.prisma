@@ -43,8 +43,7 @@ model Worker {
   id             Int          @id @default(autoincrement())
   address        String       @unique
   submissions    Submission[]
-  balance_id     Int
-  pendine_amount Int
+  pending_amount Int
   locked_amount  Int
 }
 

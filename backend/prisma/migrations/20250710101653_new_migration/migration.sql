@@ -30,8 +30,7 @@ CREATE TABLE "Option" (
 CREATE TABLE "Worker" (
     "id" SERIAL NOT NULL,
     "address" TEXT NOT NULL,
-    "balance_id" INTEGER NOT NULL,
-    "pendine_amount" INTEGER NOT NULL,
+    "pending_amount" INTEGER NOT NULL,
     "locked_amount" INTEGER NOT NULL,
 
     CONSTRAINT "Worker_pkey" PRIMARY KEY ("id")

@@ -153,7 +153,7 @@ route.post('/signin', async (req, res) => {
       {
         userId: user?.id,
       },
-      process.env.JWT_SECRET!
+      process.env.JWT_SECRET_USER!
     );
     res.status(201).json({
       token,
@@ -168,7 +168,7 @@ route.post('/signin', async (req, res) => {
       {
         userId: newUser?.id,
       },
-      process.env.JWT_SECRET!
+      process.env.JWT_SECRET_USER!
     );
     res.status(201).json({
       token,
