@@ -12,7 +12,7 @@ CREATE TABLE "Task" (
     "title" TEXT NOT NULL DEFAULT 'Select the most relevant thumbnail',
     "user_id" INTEGER NOT NULL,
     "signature" TEXT NOT NULL,
-    "amount" TEXT NOT NULL,
+    "amount" INTEGER NOT NULL,
     "done" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Task_pkey" PRIMARY KEY ("id")
@@ -53,6 +53,9 @@ CREATE UNIQUE INDEX "User_address_key" ON "User"("address");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Worker_address_key" ON "Worker"("address");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Submission_worker_id_task_id_key" ON "Submission"("worker_id", "task_id");
 
 -- AddForeignKey
 ALTER TABLE "Task" ADD CONSTRAINT "Task_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
