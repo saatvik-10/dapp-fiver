@@ -9,6 +9,66 @@ import { createTaskInput } from '../types';
 const route = Router();
 const prismaClient = new PrismaClient();
 
+route.get('/task', authMiddleware, async (req, res) => {
+  const taskId = req.query.taskId;
+  // @ts-ignore
+  const userId = req.userId;
+
+  const taskDetails = await prismaClient.task.findFirst({
+    where: {
+      id: Number(taskId),
+      user_id: Number(userId),
+    },
+    include: {
+      options: true,
+    },
+  });
+
+  if (!taskDetails) {
+    res.status(404).json({
+      message: 'No access to this task',
+    });
+    return;
+  }
+
+  // can be optimized
+  const responses = await prismaClient.submission.findMany({
+    where: {
+      task_id: Number(taskId),
+    },
+    include: {
+      option: true,
+    },
+  });
+
+  const result: Record<
+    string,
+    {
+      count: number;
+      option: {
+        imageUrl: string;
+      };
+    }
+  > = {};
+
+  taskDetails.options.forEach((option) => {
+    result[option.id] = {
+      count: 0,
+      option: {
+        imageUrl: option.image_url,
+      },
+    };
+  });
+
+  responses.forEach((res) => {
+    result[res.option_id].count += 1;
+  });
+
+  res.json({
+    result,
+  });
+});
+
 route.post('/task', authMiddleware, async (req, res) => {
   // @ts-ignore
   const userId = req.userId;
