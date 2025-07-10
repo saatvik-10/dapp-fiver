@@ -4,7 +4,6 @@ import jwt from 'jsonwebtoken';
 import { workerMiddleware } from '../middleware';
 import { getNextTask } from '../config/db';
 import { createSubmissionInput } from '../types';
-import { TOTAL_DECIMALS } from '../config/config';
 
 const TOTAL_SUBMISSION = 100;
 
@@ -28,6 +27,38 @@ route.post('/payout', workerMiddleware, async (req, res) => {
   }
   //txn logic
   const txnId = 'x23';
+
+  //add lock here later
+  await prismaClient.$transaction(async (tx) => {
+    await tx.worker.update({
+      where: {
+        id: workerId,
+      },
+      data: {
+        pending_amount: {
+          decrement: worker?.pending_amount,
+        },
+        locked_amount: {
+          increment: worker?.locked_amount,
+        },
+      },
+    });
+    await tx.payouts.create({
+      data: {
+        user_id: workerId,
+        amount: Number(worker?.pending_amount),
+        status: 'PROCESSING',
+        signature: txnId,
+      },
+    });
+  });
+
+  //send the txn to solana blockchain
+
+  res.json({
+    message: 'Processing payout',
+    amount: worker?.pending_amount,
+  });
 });
 
 route.get('/balance', workerMiddleware, async (req, res) => {
