@@ -31,22 +31,24 @@ const Upload = () => {
   }
 
   return (
-    <div className='flex justify-center'>
+    <div className='flex justify-center pt-8'>
       <div className='max-w-screen-lg w-full'>
-        <span className='text-3xl text-center fonr-sermibold'>
+        <span className='text-3xl text-start font-semibold text-blue-500'>
           Create a new task
         </span>
 
-        <label className='text-sm font-medium text-black'>Details</label>
-        <input
-          onChange={(e) => {
-            setTitle(e.target.value);
-          }}
-          type='text'
-          className='p-2 border-gray-400 text-gray-800 focus:border-gray-700 w-full'
-          placeholder='Enter your task'
-          required
-        />
+        <div className='flex flex-col gap-y-1 py-4'>
+          <label className='text-sm font-medium text-black'>Details</label>
+          <input
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}
+            type='text'
+            className='p-2 border-gray-400 text-gray-800 focus:border-gray-700 w-full border rounded-lg'
+            placeholder='Enter your task'
+            required
+          />
+        </div>
 
         <label className='text-sm font-medium text-black'>Add Images</label>
         <div className='flex items-center max-w-screen-lg pt-3'>
@@ -61,20 +63,22 @@ const Upload = () => {
           ))}
         </div>
 
-        <div className='flex pt-2 justify-center'>
-          <UploadImage
-            onImageAdd={(imageUrl) => {
-              setImages((prev) => [...prev, imageUrl]);
-            }}
-          />
-        </div>
+        <div className='flex flex-col items-center justify-center'>
+          <div className='flex pt-2 pb-4 justify-center'>
+            <UploadImage
+              onImageAdd={(imageUrl) => {
+                setImages((prev) => [...prev, imageUrl]);
+              }}
+            />
+          </div>
 
-        <button
-          className='rounded-xl bg-blue-500 text-white'
-          onClick={onSubmit}
-        >
-          Submit Task
-        </button>
+          <button
+            className='rounded-lg bg-blue-500 text-white p-1.5 hover:cursor-pointer hover:bg-blue-700'
+            onClick={onSubmit}
+          >
+            Submit Task
+          </button>
+        </div>
       </div>
     </div>
   );
