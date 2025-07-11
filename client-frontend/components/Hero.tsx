@@ -4,7 +4,7 @@ export const Hero = () => {
       <div className='text-3xl flex justify-center font-bold'>
         Welcome to Dapp-Fiver
       </div>
-      <div className='text-lg flex justify-center pt-4'>
+      <div className='text-lg flex justify-center'>
         Get your data annotated by the community
       </div>
     </div>
