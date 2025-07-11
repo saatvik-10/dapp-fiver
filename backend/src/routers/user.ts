@@ -82,7 +82,7 @@ route.post('/task', authMiddleware, async (req, res) => {
   if (!parseData.success) {
     res.status(400).json({
       message: 'Invalid input data',
-      error: parseData.error.errors,
+      error: parseData.error.message,
     });
   }
 
@@ -125,16 +125,13 @@ route.get('/presignedUrl', authMiddleware, async (req, res) => {
     Bucket: process.env.AWS_BUCKET_NAME!,
     Key: `/fiver-uploads/${userId}/${Math.random()}/image.jpg`,
     Conditions: [
-      ['content-length-range', 0, 10485760], // 10 MB
+      ['content-length-range', 0, 10 * 1024 * 1024], // 10 MB
     ],
-    Fields: {
-      'Content-Type': 'image/png',
-    },
     Expires: 3600,
   });
 
   res.json({
-    presignedUrl: url,
+    preSignedUrl: url,
     fields,
   });
 });
