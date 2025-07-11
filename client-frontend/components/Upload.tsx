@@ -1,6 +1,6 @@
 'use client';
 
-import { BACKEND_URL } from '@/config/lib';
+import { BACKEND_URL } from '@/utils/lib';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import React from 'react';

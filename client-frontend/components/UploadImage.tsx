@@ -1,6 +1,6 @@
 'use client';
 
-import { BACKEND_URL, CLOUDFRONT_URL } from '@/config/lib';
+import { BACKEND_URL, CLOUDFRONT_URL } from '@/utils/lib';
 import axios from 'axios';
 import React from 'react';
 
@@ -18,14 +18,15 @@ const UploadImage = ({
     try {
       const file = e.target.files?.[0];
 
-      const res = await axios.post(`${BACKEND_URL}/v1/presignedUrl`, {
+      const res = await axios.get(`${BACKEND_URL}/v1/user/presignedUrl`, {
         headers: {
           Authorization: localStorage.getItem('token'),
         },
       });
-      const presignedUrl = res.data.presignedUrl;
+      const presignedUrl = res.data.preSignedUrl;
 
       const formData = new FormData();
+
       formData.set('bucket', res.data.fields['bucket']);
       formData.set('X-Amz-Algorithm', res.data.fields['X-Amz-Algorithm']);
       formData.set('X-Amz-Credential', res.data.fields['X-Amz-Credential']);
