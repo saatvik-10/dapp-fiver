@@ -123,7 +123,7 @@ route.get('/presignedUrl', authMiddleware, async (req, res) => {
   });
   const { url, fields } = await createPresignedPost(s3Client, {
     Bucket: process.env.AWS_BUCKET_NAME!,
-    Key: `/fiver-uploads/${userId}/${Math.random()}/image.jpg`,
+    Key: `fiver-uploads/${userId}/${Math.random()}/image.jpg`,
     Conditions: [
       ['content-length-range', 0, 10 * 1024 * 1024], // 10 MB
     ],
