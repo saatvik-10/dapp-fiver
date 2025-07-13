@@ -60,12 +60,20 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const [taskDetails, setTaskDetails] = useState<{ title?: string }>({});
 
   useEffect(() => {
-    setInterval(() => {
-      getTask(id).then((data) => {
-        setResult(data.result);
-        setTaskDetails(data.taskDetails);
-      });
-    }, 5000);
+    let timeoutId: NodeJS.Timeout;
+
+    const fetchData = async () => {
+      const data = await getTask(id);
+      setResult(data.result);
+      setTaskDetails(data.taskDetails);
+      timeoutId = setTimeout(fetchData, 5000);
+    };
+
+    fetchData();
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, [id]);
 
   const pieData = Object.keys(result).map((id) => ({
