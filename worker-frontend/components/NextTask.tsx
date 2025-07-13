@@ -27,8 +27,8 @@ export default function NextTask() {
       const res = await axios.post(
         `${BACKEND_URL}/v1/worker/submission`,
         {
-          taskId: currTask.id,
-          submission: optionId,
+          taskId: currTask.id.toString(),
+          selection: optionId.toString(),
         },
         {
           headers: {
@@ -69,8 +69,8 @@ export default function NextTask() {
 
   if (!currTask) {
     return (
-      <div className='tect-center p-4'>
-        No Task available, please try again later.
+      <div className='text-center p-4'>
+        No more Task available, please try again later.
       </div>
     );
   }
