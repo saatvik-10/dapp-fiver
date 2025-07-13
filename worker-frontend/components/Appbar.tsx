@@ -6,14 +6,16 @@ import { BACKEND_URL } from '@/utils/lib';
 
 const Appbar = () => {
   const signin = async () => {
-    const res = await axios.post(`${BACKEND_URL}/v1/user/signin`, {});
+    const res = await axios.post(`${BACKEND_URL}/v1/worker/signin`, {});
     localStorage.setItem('token', res.data.token);
   };
 
   return (
     <div className='bg-blue-400 p-4'>
       <div className='flex items-center justify-between max-w-7xl mx-auto'>
-        <span className='font-bold text-xl text-white'>Dapp-Fiver</span>
+        <span className='font-bold text-xl text-white'>
+          Dapp-Fiver <span className='text-xs'>(Worker)</span>
+        </span>
         <button
           className='cursor-pointer bg-white p-1.5 text-blue-400 rounded-lg font-medium'
           onClick={signin}
