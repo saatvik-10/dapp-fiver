@@ -93,7 +93,7 @@ route.post('/submission', workerMiddleware, async (req, res) => {
       });
     }
 
-    const amount = Number(task?.amount) / TOTAL_SUBMISSION;
+    const amount = (Number(task?.amount) / TOTAL_SUBMISSION).toString();
 
     const response = await prismaClient.$transaction(async (tx) => {
       const submission = await tx.submission.create({
@@ -101,7 +101,7 @@ route.post('/submission', workerMiddleware, async (req, res) => {
           option_id: Number(parsedBody.data.selection),
           worker_id: workerId,
           task_id: Number(parsedBody.data.taskId),
-          amount,
+          amount: Number(amount),
         },
       });
 
@@ -122,7 +122,12 @@ route.post('/submission', workerMiddleware, async (req, res) => {
     const nextTask = await getNextTask(Number(workerId));
     res.json({
       nextTask,
-      amount: (Number(task?.amount) / TOTAL_SUBMISSION).toString(),
+      amount,
+    });
+  } else {
+    res.status(400).json({
+      message: 'Invalid input data',
+      error: parsedBody.error.message,
     });
   }
 });
