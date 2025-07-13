@@ -60,11 +60,12 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const [taskDetails, setTaskDetails] = useState<{ title?: string }>({});
 
   useEffect(() => {
-    getTask(id).then((data) => {
-      setResult(data.result);
-      console.log(data.taskDetails);
-      setTaskDetails(data.taskDetails);
-    });
+    setInterval(() => {
+      getTask(id).then((data) => {
+        setResult(data.result);
+        setTaskDetails(data.taskDetails);
+      });
+    }, 5000);
   }, [id]);
 
   const pieData = Object.keys(result).map((id) => ({
