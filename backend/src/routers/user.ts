@@ -67,6 +67,7 @@ route.get('/task', authMiddleware, async (req, res) => {
 
   res.json({
     result,
+    taskDetails,
   });
 });
 
@@ -90,7 +91,7 @@ route.post('/task', authMiddleware, async (req, res) => {
     //avoid partial updates, either both title and options should happen or none
     const res = await tx.task.create({
       data: {
-        title: parseData.data?.title,
+        title: parseData.data?.title ?? 'Select the most clickable thumbnail',
         amount: 1 * TOTAL_DECIMALS,
         signature: 'signature',
         user_id: userId,
