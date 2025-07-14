@@ -6,6 +6,8 @@ import {
   WalletDisconnectButton,
 } from '@solana/wallet-adapter-react-ui';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { BACKEND_URL } from '@/utils/lib';
+import axios from 'axios';
 
 const Appbar = () => {
   const { publicKey, signMessage } = useWallet();
@@ -15,7 +17,12 @@ const Appbar = () => {
       `Welcome to D@pp-Fiv€₹!\n\nSign this message to authenticate your wallet and start earning by completing tasks.\n\nTimestamp: ${new Date().toISOString()}\nWallet: ${publicKey?.toString()}`
     );
     const signature = await signMessage?.(msg);
-    console.log('Signature:', signature);
+
+    const res = await axios.post(`${BACKEND_URL}/v1/user/signin`, {
+      signature,
+    });
+
+    localStorage.setItem('token', res.data.token);
   }
 
   useEffect(() => {
