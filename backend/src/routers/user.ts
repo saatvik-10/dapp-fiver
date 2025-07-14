@@ -6,6 +6,8 @@ import { authMiddleware } from '../middleware';
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
 import { createTaskInput } from '../types';
 import { TOTAL_DECIMALS } from '../config/config';
+import nacl from 'tweetnacl';
+import { PublicKey } from '@solana/web3.js';
 
 const route = Router();
 const prismaClient = new PrismaClient();
@@ -139,11 +141,20 @@ route.get('/presignedUrl', authMiddleware, async (req, res) => {
 
 //signin with wallet
 route.post('/signin', async (req, res) => {
-  const walletAddress = '3sXPJophwvX6crRSEoKXXdH6hLRdNKKUazwaXEpuxhLS';
+  const { signature, publicKey } = req.body;
+  const msg = new TextEncoder().encode(
+    `Welcome to D@pp-Fiv€₹!\n\nSign this message to authenticate your wallet and start earning by completing tasks.\n\nTimestamp: ${new Date().toISOString()}\nWallet: ${publicKey?.toString()}`
+  );
+
+  const result = nacl.sign.detached.verify(
+    msg,
+    new Uint8Array(signature.data),
+    new PublicKey(publicKey).toBytes()
+  );
 
   const user = await prismaClient.user.findFirst({
     where: {
-      address: walletAddress,
+      address: publicKey,
     },
   });
 
@@ -160,7 +171,7 @@ route.post('/signin', async (req, res) => {
   } else {
     const newUser = await prismaClient.user.create({
       data: {
-        address: walletAddress,
+        address: publicKey,
       },
     });
     const token = jwt.sign(

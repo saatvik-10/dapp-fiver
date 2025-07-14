@@ -12,6 +12,10 @@ import axios from 'axios';
 const Appbar = () => {
   const { publicKey, signMessage } = useWallet();
 
+  if (!publicKey) {
+    return;
+  }
+
   async function handleSignMessage() {
     const msg = new TextEncoder().encode(
       `Welcome to D@pp-Fiv€₹!\n\nSign this message to authenticate your wallet and start earning by completing tasks.\n\nTimestamp: ${new Date().toISOString()}\nWallet: ${publicKey?.toString()}`
