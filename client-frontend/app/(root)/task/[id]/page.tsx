@@ -84,7 +84,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   return (
     <div>
       <Appbar />
-      <div className='text-3xl pt-20 flex justify-center font-semibold underline text-blue-500'>
+      <div className='text-3xl pt-20 flex justify-center font-semibold underline text-purple-800'>
         {taskDetails?.title}
       </div>
       <div className='flex justify-center pt-6'>
