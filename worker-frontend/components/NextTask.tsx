@@ -77,7 +77,7 @@ export default function NextTask() {
 
   return (
     <div>
-      <div className='text-3xl pt-20 flex justify-center font-semibold underline text-blue-500'>
+      <div className='text-3xl pt-20 flex justify-center font-semibold underline text-purple-800'>
         {currTask?.title}
       </div>
       <div className='flex justify-center pt-6'>
@@ -109,7 +109,7 @@ function Option({
         onClick={onSelect}
         src={image_url}
         alt=''
-        className='w-96 rounded-lg cursor-pointer hover:opacity-50 hover:border hover:border-blue-500 hover:shadow-md'
+        className='w-96 rounded-lg cursor-pointer hover:opacity-50 hover:border hover:border-purple-800 hover:shadow-md'
       />
       <div className='flex justify-center items-center font-medium text-white'>
         Image-{id}

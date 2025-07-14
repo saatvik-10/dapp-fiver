@@ -33,7 +33,7 @@ const Upload = () => {
   return (
     <div className='flex justify-center pt-8'>
       <div className='max-w-screen-lg w-full'>
-        <span className='text-3xl text-start font-semibold text-blue-500'>
+        <span className='text-3xl text-start font-semibold text-purple-800'>
           Create a new task
         </span>
 
@@ -73,7 +73,7 @@ const Upload = () => {
           </div>
 
           <button
-            className='rounded-lg bg-blue-500 text-white p-1.5 hover:cursor-pointer hover:bg-blue-700'
+            className='rounded-lg bg-purple-800 text-white p-1.5 hover:cursor-pointer hover:bg-purple-500'
             onClick={onSubmit}
           >
             Submit Task

@@ -54,13 +54,13 @@ const UploadImage = ({
   }
 
   return (
-    <div className='w-96 h-40 border border-dashed text-3xl hover:cursor-pointer rounded border-blue-500'>
+    <div className='w-96 h-40 border border-dashed text-3xl hover:cursor-pointer rounded border-purple-800'>
       <div className='h-full flex justify-center'>
         <div className='flex flex-col h-full justify-center relative'>
           {uploading ? (
             <div className='text-sm'>Loading...</div>
           ) : (
-            <div className='text-blue-400'>
+            <div className='text-purple-800'>
               +
               <input
                 className=' bg-red-400 w-72 h-40 opacity-0 absolute top-0 left-0'
