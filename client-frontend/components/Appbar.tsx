@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   WalletMultiButton,
   WalletDisconnectButton,
@@ -8,7 +8,19 @@ import {
 import { useWallet } from '@solana/wallet-adapter-react';
 
 const Appbar = () => {
-  const { publicKey } = useWallet();
+  const { publicKey, signMessage } = useWallet();
+
+  async function handleSignMessage() {
+    const msg = new TextEncoder().encode(
+      `Welcome to D@pp-Fiv€₹!\n\nSign this message to authenticate your wallet and start earning by completing tasks.\n\nTimestamp: ${new Date().toISOString()}\nWallet: ${publicKey?.toString()}`
+    );
+    const signature = await signMessage?.(msg);
+    console.log('Signature:', signature);
+  }
+
+  useEffect(() => {
+    handleSignMessage();
+  }, [publicKey]);
 
   return (
     <div className='bg-white p-3 shadow-md'>
