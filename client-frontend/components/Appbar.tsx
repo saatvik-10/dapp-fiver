@@ -20,6 +20,7 @@ const Appbar = () => {
 
     const res = await axios.post(`${BACKEND_URL}/v1/user/signin`, {
       signature,
+      publicKey: publicKey?.toString(),
     });
 
     localStorage.setItem('token', res.data.token);
