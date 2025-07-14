@@ -1,8 +1,6 @@
 'use client';
 
 import React from 'react';
-import axios from 'axios';
-import { BACKEND_URL } from '@/utils/lib';
 import {
   WalletMultiButton,
   WalletDisconnectButton,
