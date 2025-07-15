@@ -159,7 +159,7 @@ route.get('/nextTask', workerMiddleware, async (req, res) => {
 route.post('/signin', async (req, res) => {
   const { signature, publicKey } = req.body;
   const msg = new TextEncoder().encode(
-    `Welcome to D@pp-Fiv€₹!\n\nSign this message to authenticate your wallet and start earning by completing tasks.\n\nTimestamp: ${new Date().toISOString()}\nWallet: ${publicKey?.toString()}`
+    `Welcome to D@pp-Fiv€₹!\n\nSign this message to authenticate your wallet and start earning by completing tasks.\n\nWallet: ${publicKey?.toString()}`
   );
 
   const result = nacl.sign.detached.verify(
@@ -190,6 +190,7 @@ route.post('/signin', async (req, res) => {
     );
     res.status(201).json({
       token,
+      amount: worker?.pending_amount,
     });
   } else {
     const newWorker = await prismaClient.worker.create({
@@ -207,6 +208,7 @@ route.post('/signin', async (req, res) => {
     );
     res.status(201).json({
       token,
+      amount: 0,
     });
   }
 });
