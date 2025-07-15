@@ -96,6 +96,7 @@ route.post('/task', authMiddleware, async (req, res) => {
       message: 'Invalid input data',
       error: parseData.error.message,
     });
+    return;
   }
 
   const transaction = await connection.getTransaction(
@@ -113,6 +114,7 @@ route.post('/task', authMiddleware, async (req, res) => {
     res.status(400).json({
       message: 'Incorrect Transaction signature',
     });
+    return;
   }
 
   if (
@@ -122,6 +124,7 @@ route.post('/task', authMiddleware, async (req, res) => {
     res.status(400).json({
       message: 'Transaction is not sent to the correct wallet',
     });
+    return;
   }
 
   if (
@@ -131,6 +134,7 @@ route.post('/task', authMiddleware, async (req, res) => {
     res.status(400).json({
       message: 'Transaction is not sent to the correct wallet',
     });
+    return;
   }
 
   const response = await prismaClient.$transaction(async (tx) => {
@@ -200,6 +204,7 @@ route.post('/signin', async (req, res) => {
     res.status(400).json({
       message: 'Invalid signature',
     });
+    return;
   }
 
   const user = await prismaClient.user.findFirst({

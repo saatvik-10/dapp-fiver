@@ -26,6 +26,7 @@ route.post('/payout', workerMiddleware, async (req, res) => {
     res.status(404).json({
       message: 'User not found',
     });
+    return;
   }
   //txn logic
   const txnId = 'x23';
@@ -93,6 +94,7 @@ route.post('/submission', workerMiddleware, async (req, res) => {
       res.status(404).json({
         message: 'Incorrect task ID',
       });
+      return;
     }
 
     const amount = (Number(task?.amount) / TOTAL_SUBMISSION).toString();
@@ -131,6 +133,7 @@ route.post('/submission', workerMiddleware, async (req, res) => {
       message: 'Invalid input data',
       error: parsedBody.error.message,
     });
+    return;
   }
 });
 
@@ -169,6 +172,7 @@ route.post('/signin', async (req, res) => {
     res.status(400).json({
       message: 'Invalid signature',
     });
+    return;
   }
 
   const worker = await prismaClient.worker.findFirst({
