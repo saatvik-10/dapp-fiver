@@ -18,7 +18,7 @@ const Appbar = () => {
 
   async function handleSignMessage() {
     const msg = new TextEncoder().encode(
-      `Welcome to D@pp-Fiv€₹!\n\nSign this message to authenticate your wallet and start earning by completing tasks.\n\nTimestamp: ${new Date().toISOString()}\nWallet: ${publicKey?.toString()}`
+      `Welcome to D@pp-Fiv€₹!\n\nSign this message to authenticate your wallet and post tasks.\n\nTimestamp: ${new Date().toISOString()}\nWallet: ${publicKey?.toString()}`
     );
     const signature = await signMessage?.(msg);
 
