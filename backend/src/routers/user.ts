@@ -196,6 +196,12 @@ route.post('/signin', async (req, res) => {
     new PublicKey(publicKey).toBytes()
   );
 
+  if (!result) {
+    res.status(400).json({
+      message: 'Invalid signature',
+    });
+  }
+
   const user = await prismaClient.user.findFirst({
     where: {
       address: publicKey,
