@@ -45,12 +45,14 @@ route.post('/payout', workerMiddleware, async (req, res) => {
   const transaction = new Transaction().add(
     SystemProgram.transfer({
       fromPubkey: new PublicKey(process.env.PARENT_WALLET_ADDRESS!),
-      toPubkey: new PublicKey(worker?.address),
-      lamports: (1000_000_000 * worker?.pending_amount) / TOTAL_DECIMALS,
+      toPubkey: new PublicKey(worker.address),
+      lamports: Math.floor(
+        (1000_000_000 * worker.pending_amount) / TOTAL_DECIMALS
+      ),
     })
   );
 
-  let keypair;
+  let keypair: Keypair;
   try {
     keypair = Keypair.fromSecretKey(
       bs58.decode(process.env.PARENT_WALLET_KEY!)
@@ -77,7 +79,7 @@ route.post('/payout', workerMiddleware, async (req, res) => {
           decrement: worker?.pending_amount,
         },
         locked_amount: {
-          increment: worker?.locked_amount,
+          increment: worker?.pending_amount,
         },
       },
     });
