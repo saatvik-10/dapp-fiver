@@ -32,6 +32,14 @@ const Appbar = () => {
     localStorage.setItem('token', res.data.token);
   }
 
+  async function payWorker() {
+    axios.post(`${BACKEND_URL}/v1/worker/payout`, {
+      headers: {
+        Authorization: localStorage.getItem('token'),
+      },
+    });
+  }
+
   useEffect(() => {
     if (publicKey && signMessage) {
       handleSignMessage();
@@ -45,7 +53,10 @@ const Appbar = () => {
           D@pp-Fiv€₹ (wo₹ke₹)
         </span>
         <div className='flex items-center justify-center gap-4'>
-          <button className='border-2 cursor-pointer hover:bg-purple-200 font-semibold rounded-lg p-1 border-purple-800 bg-white text-purple-800'>
+          <button
+            onClick={payWorker}
+            className='border-2 cursor-pointer hover:bg-purple-200 font-semibold rounded-lg p-1 border-purple-800 bg-white text-purple-800'
+          >
             Pay me {balance} SOL
           </button>
           {publicKey ? <WalletDisconnectButton /> : <WalletMultiButton />}
