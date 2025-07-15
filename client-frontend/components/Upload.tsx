@@ -5,11 +5,17 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import UploadImage from './UploadImage';
+import { SystemProgram, Transaction, PublicKey } from '@solana/web3.js';
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 
 const Upload = () => {
   const route = useRouter();
+
   const [images, setImages] = React.useState<string[]>([]);
   const [title, setTitle] = React.useState<string>('');
+  const [txSignature, setTxSignature] = React.useState<string | null>(null);
+  const { publicKey, sendTransaction } = useWallet();
+  const { connection } = useConnection();
 
   async function onSubmit() {
     const res = await axios.post(
@@ -19,7 +25,7 @@ const Upload = () => {
           imageUrl: image,
         })),
         title,
-        signature: '0x123',
+        signature: txSignature,
       },
       {
         headers: {
@@ -28,6 +34,33 @@ const Upload = () => {
       }
     );
     route.push(`/task/${res.data.id}`);
+  }
+
+  async function makePayment() {
+    const transaction = new Transaction().add(
+      SystemProgram.transfer({
+        fromPubkey: publicKey!,
+        toPubkey: new PublicKey('YourProgramPublicKeyHere'),
+        lamports: 100000000,
+      })
+    );
+
+    const {
+      context: { slot: minContextSlot },
+      value: { blockhash, lastValidBlockHeight },
+    } = await connection.getLatestBlockhashAndContext();
+
+    const signature = await sendTransaction(transaction, connection, {
+      minContextSlot,
+    });
+
+    await connection.confirmTransaction({
+      blockhash,
+      lastValidBlockHeight,
+      signature,
+    });
+
+    setTxSignature(signature);
   }
 
   return (
@@ -74,9 +107,9 @@ const Upload = () => {
 
           <button
             className='rounded-lg bg-purple-800 text-white p-1.5 hover:cursor-pointer hover:bg-purple-500'
-            onClick={onSubmit}
+            onClick={txSignature ? onSubmit : makePayment}
           >
-            Submit Task
+            {txSignature ? 'Submit Task' : 'Pay 0.1 SOL'}
           </button>
         </div>
       </div>

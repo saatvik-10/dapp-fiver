@@ -5,12 +5,15 @@ import jwt from 'jsonwebtoken';
 import { authMiddleware } from '../middleware';
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
 import { createTaskInput } from '../types';
-import { TOTAL_DECIMALS } from '../config/config';
+import { PARENT_WALLET_ADDRESS, TOTAL_DECIMALS } from '../config/config';
 import nacl from 'tweetnacl';
-import { PublicKey } from '@solana/web3.js';
+import { Connection, PublicKey } from '@solana/web3.js';
 
 const route = Router();
 const prismaClient = new PrismaClient();
+const connection = new Connection(
+  'https://solana-devnet.g.alchemy.com/v2/Kav7irBbUIgH28nBgHy8EvLO0S6ndZOU'
+);
 
 route.get('/task', authMiddleware, async (req, res) => {
   const taskId = req.query.taskId;
@@ -82,10 +85,51 @@ route.post('/task', authMiddleware, async (req, res) => {
 
   const parseData = createTaskInput.safeParse(body);
 
+  const user = await prismaClient.user.findFirst({
+    where: {
+      id: userId,
+    },
+  });
+
   if (!parseData.success) {
     res.status(400).json({
       message: 'Invalid input data',
       error: parseData.error.message,
+    });
+  }
+
+  const transaction = await connection.getTransaction(
+    parseData.data!.signature,
+    {
+      maxSupportedTransactionVersion: 1,
+    }
+  );
+
+  if (
+    (transaction?.meta?.postBalances[1] ?? 0) -
+      (transaction?.meta?.preBalances[1] ?? 0) !=
+    100000000
+  ) {
+    res.status(400).json({
+      message: 'Incorrect Transaction signature',
+    });
+  }
+
+  if (
+    transaction?.transaction.message.getAccountKeys().get(1)?.toString() !==
+    PARENT_WALLET_ADDRESS
+  ) {
+    res.status(400).json({
+      message: 'Transaction is not sent to the correct wallet',
+    });
+  }
+
+  if (
+    transaction?.transaction.message.getAccountKeys().get(1)?.toString() !==
+    user?.address
+  ) {
+    res.status(400).json({
+      message: 'Transaction is not sent to the correct wallet',
     });
   }
 
