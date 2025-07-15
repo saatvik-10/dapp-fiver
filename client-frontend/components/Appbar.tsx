@@ -33,7 +33,7 @@ const Appbar = () => {
     if (publicKey && signMessage) {
       handleSignMessage();
     }
-  }, [publicKey, signMessage]);
+  }, [publicKey, signMessage, handleSignMessage]);
 
   return (
     <div className='bg-white p-3 shadow-md'>
