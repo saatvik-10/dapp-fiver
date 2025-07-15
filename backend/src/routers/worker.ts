@@ -50,9 +50,17 @@ route.post('/payout', workerMiddleware, async (req, res) => {
     })
   );
 
-  const keypair = Keypair.fromSecretKey(
-    bs58.decode(process.env.PARENT_WALLET_KEY!)
-  );
+  let signature = "";
+  try {
+    const keypair = Keypair.fromSecretKey(
+      bs58.decode(process.env.PARENT_WALLET_KEY!)
+    );
+  } catch (err) {
+    res.status(500).json({
+      message: 'Error processing payout',
+    });
+    return;
+  }
 
   const signature = await sendAndConfirmTransaction(connection, transaction, [
     keypair, //signers
