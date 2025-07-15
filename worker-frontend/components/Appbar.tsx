@@ -27,6 +27,8 @@ const Appbar = () => {
       publicKey: publicKey?.toString(),
     });
 
+    setBalance(res.data.amount / 1000000000);
+
     localStorage.setItem('token', res.data.token);
   }
 

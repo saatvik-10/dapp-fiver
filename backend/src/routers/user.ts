@@ -142,7 +142,7 @@ route.post('/task', authMiddleware, async (req, res) => {
     const res = await tx.task.create({
       data: {
         title: parseData.data?.title ?? 'Select the most clickable thumbnail',
-        amount: 1 * TOTAL_DECIMALS,
+        amount: 0.1 * TOTAL_DECIMALS,
         signature: 'signature',
         user_id: userId,
       },

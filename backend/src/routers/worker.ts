@@ -6,6 +6,7 @@ import { getNextTask } from '../config/db';
 import { createSubmissionInput } from '../types';
 import nacl from 'tweetnacl';
 import { PublicKey } from '@solana/web3.js';
+import { TOTAL_DECIMALS } from '../config/config';
 
 const TOTAL_SUBMISSION = 100;
 
@@ -190,7 +191,7 @@ route.post('/signin', async (req, res) => {
     );
     res.status(201).json({
       token,
-      amount: worker?.pending_amount,
+      amount: worker?.pending_amount / TOTAL_DECIMALS,
     });
   } else {
     const newWorker = await prismaClient.worker.create({
