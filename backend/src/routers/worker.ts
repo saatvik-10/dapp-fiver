@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken';
 import { workerMiddleware } from '../middleware';
 import { getNextTask } from '../config/db';
 import { createSubmissionInput } from '../types';
+import nacl from 'tweetnacl';
+import { PublicKey } from '@solana/web3.js';
 
 const TOTAL_SUBMISSION = 100;
 
@@ -152,11 +154,26 @@ route.get('/nextTask', workerMiddleware, async (req, res) => {
 
 //signin with wallet
 route.post('/signin', async (req, res) => {
-  const walletAddress = '8dAkchckXn9mEtan911z1aA4ebgzK3HZWM8B4ZwmGrXU';
+  const { signature, publicKey } = req.body;
+  const msg = new TextEncoder().encode(
+    `Welcome to D@pp-Fiv€₹!\n\nSign this message to authenticate your wallet and start earning by completing tasks.\n\nTimestamp: ${new Date().toISOString()}\nWallet: ${publicKey?.toString()}`
+  );
+
+  const result = nacl.sign.detached.verify(
+    msg,
+    new Uint8Array(signature.data),
+    new PublicKey(publicKey).toBytes()
+  );
+
+  if (!result) {
+    res.status(400).json({
+      message: 'Invalid signature',
+    });
+  }
 
   const worker = await prismaClient.worker.findFirst({
     where: {
-      address: walletAddress,
+      address: publicKey,
     },
   });
 
@@ -173,7 +190,7 @@ route.post('/signin', async (req, res) => {
   } else {
     const newWorker = await prismaClient.worker.create({
       data: {
-        address: walletAddress,
+        address: publicKey,
         pending_amount: 0,
         locked_amount: 0,
       },
