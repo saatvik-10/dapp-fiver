@@ -50,9 +50,9 @@ route.post('/payout', workerMiddleware, async (req, res) => {
     })
   );
 
-  let signature = "";
+  let keypair;
   try {
-    const keypair = Keypair.fromSecretKey(
+    keypair = Keypair.fromSecretKey(
       bs58.decode(process.env.PARENT_WALLET_KEY!)
     );
   } catch (err) {
