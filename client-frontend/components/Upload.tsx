@@ -40,7 +40,7 @@ const Upload = () => {
     const transaction = new Transaction().add(
       SystemProgram.transfer({
         fromPubkey: publicKey!,
-        toPubkey: new PublicKey('YourProgramPublicKeyHere'),
+        toPubkey: new PublicKey('8dAkchckXn9mEtan911z1aA4ebgzK3HZWM8B4ZwmGrXU'),
         lamports: 100000000,
       })
     );
@@ -54,11 +54,14 @@ const Upload = () => {
       minContextSlot,
     });
 
-    await connection.confirmTransaction({
-      blockhash,
-      lastValidBlockHeight,
-      signature,
-    });
+    await connection.confirmTransaction(
+      {
+        blockhash,
+        lastValidBlockHeight,
+        signature,
+      },
+      'confirmed'
+    );
 
     setTxSignature(signature);
   }

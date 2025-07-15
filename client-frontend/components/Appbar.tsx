@@ -12,13 +12,12 @@ import axios from 'axios';
 const Appbar = () => {
   const { publicKey, signMessage } = useWallet();
 
-  if (!publicKey) {
-    return;
-  }
-
   async function handleSignMessage() {
+    if (!publicKey) {
+      return;
+    }
     const msg = new TextEncoder().encode(
-      `Welcome to D@pp-Fiv€₹!\n\nSign this message to authenticate your wallet and post tasks.\n\nTimestamp: ${new Date().toISOString()}\nWallet: ${publicKey?.toString()}`
+      `Welcome to D@pp-Fiv€₹!\n\nSign this message to authenticate your wallet and post tasks.\n\nWallet: ${publicKey?.toString()}`
     );
     const signature = await signMessage?.(msg);
 
@@ -31,8 +30,10 @@ const Appbar = () => {
   }
 
   useEffect(() => {
-    handleSignMessage();
-  }, [publicKey]);
+    if (publicKey && signMessage) {
+      handleSignMessage();
+    }
+  }, [publicKey, signMessage]);
 
   return (
     <div className='bg-white p-3 shadow-md'>

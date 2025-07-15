@@ -191,7 +191,7 @@ route.get('/presignedUrl', authMiddleware, async (req, res) => {
 route.post('/signin', async (req, res) => {
   const { signature, publicKey } = req.body;
   const msg = new TextEncoder().encode(
-    `Welcome to D@pp-Fiv€₹!\n\nSign this message to authenticate your wallet and post tasks.\n\nTimestamp: ${new Date().toISOString()}\nWallet: ${publicKey?.toString()}`
+    `Welcome to D@pp-Fiv€₹!\n\nSign this message to authenticate your wallet and post tasks.\n\nWallet: ${publicKey?.toString()}`
   );
 
   const result = nacl.sign.detached.verify(
