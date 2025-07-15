@@ -1,3 +1,1 @@
 export const TOTAL_DECIMALS = 1000_000_000
-
-export const PARENT_WALLET_ADDRESS = '8dAkchckXn9mEtan911z1aA4ebgzK3HZWM8B4ZwmGrXU'

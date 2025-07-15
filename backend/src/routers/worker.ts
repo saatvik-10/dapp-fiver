@@ -5,10 +5,22 @@ import { workerMiddleware } from '../middleware';
 import { getNextTask } from '../config/db';
 import { createSubmissionInput } from '../types';
 import nacl from 'tweetnacl';
-import { PublicKey } from '@solana/web3.js';
+import {
+  Connection,
+  Keypair,
+  PublicKey,
+  sendAndConfirmTransaction,
+  SystemProgram,
+  Transaction,
+} from '@solana/web3.js';
 import { TOTAL_DECIMALS } from '../config/config';
+import bs58 from 'bs58';
 
 const TOTAL_SUBMISSION = 100;
+
+const connection = new Connection(
+  'https://solana-devnet.g.alchemy.com/v2/Kav7irBbUIgH28nBgHy8EvLO0S6ndZOU'
+);
 
 const route = Router();
 const prismaClient = new PrismaClient();
@@ -30,7 +42,21 @@ route.post('/payout', workerMiddleware, async (req, res) => {
     return;
   }
   //txn logic
-  const txnId = 'x23';
+  const transaction = new Transaction().add(
+    SystemProgram.transfer({
+      fromPubkey: new PublicKey(process.env.PARENT_WALLET_ADDRESS!),
+      toPubkey: new PublicKey(worker?.address),
+      lamports: (1000_000_000 * worker?.pending_amount) / TOTAL_DECIMALS,
+    })
+  );
+
+  const keypair = Keypair.fromSecretKey(
+    bs58.decode(process.env.PARENT_WALLET_KEY!)
+  );
+
+  const signature = await sendAndConfirmTransaction(connection, transaction, [
+    keypair, //signers
+  ]);
 
   //add lock here later
   await prismaClient.$transaction(async (tx) => {
@@ -52,7 +78,7 @@ route.post('/payout', workerMiddleware, async (req, res) => {
         user_id: workerId,
         amount: Number(worker?.pending_amount),
         status: 'PROCESSING',
-        signature: txnId,
+        signature: signature,
       },
     });
   });

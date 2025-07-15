@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import { authMiddleware } from '../middleware';
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
 import { createTaskInput } from '../types';
-import { PARENT_WALLET_ADDRESS, TOTAL_DECIMALS } from '../config/config';
+import { TOTAL_DECIMALS } from '../config/config';
 import nacl from 'tweetnacl';
 import { Connection, PublicKey } from '@solana/web3.js';
 
@@ -119,7 +119,7 @@ route.post('/task', authMiddleware, async (req, res) => {
 
   if (
     transaction?.transaction.message.getAccountKeys().get(1)?.toString() !==
-    PARENT_WALLET_ADDRESS
+    process.env.PARENT_WALLET_ADDRESS
   ) {
     res.status(400).json({
       message: 'Transaction is not sent to the correct wallet',

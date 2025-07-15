@@ -40,7 +40,7 @@ const Upload = () => {
     const transaction = new Transaction().add(
       SystemProgram.transfer({
         fromPubkey: publicKey!,
-        toPubkey: new PublicKey('8dAkchckXn9mEtan911z1aA4ebgzK3HZWM8B4ZwmGrXU'),
+        toPubkey: new PublicKey(process.env.NEXT_PUBLIC_PARENT_WALLET_ADDRESS!),
         lamports: 100000000,
       })
     );
